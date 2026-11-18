@@ -1,1 +1,58 @@
-hello world
+def create_word_report(input_name, output_name):
+    line_count = 0
+    total_words = 0
+    word_counts = {}
+    punctuation = ".,!?;:"
+
+    with open(input_name, "r") as infile:
+        for line in infile:
+            line_count += 1
+            clean_line = line.lower()
+
+            # Replace punctuation marks with spaces
+            for ch in punctuation:
+                clean_line = clean_line.replace(ch, " ")
+
+            words = clean_line.split()
+            total_words += len(words)
+
+            # Build word frequency dictionary
+            for word in words:
+                if word in word_counts:
+                    word_counts[word] += 1
+                else:
+                    word_counts[word] = 1
+
+    unique_words = len(word_counts)
+
+    # Find the most frequent word and its count
+    most_frequent_word = ""
+    max_count = 0
+    for word, count in word_counts.items():
+        if count > max_count:
+            most_frequent_word = word
+            max_count = count
+
+    # Write the four summary lines to output_name
+    with open(output_name, "w") as outfile:
+        outfile.write(f"Lines: {line_count}\n")
+        outfile.write(f"Words: {total_words}\n")
+        outfile.write(f"Unique words: {unique_words}\n")
+        outfile.write(f"Most frequent: {most_frequent_word} {max_count}\n")
+
+    return {
+        "lines": line_count,
+        "words": total_words,
+        "unique_words": unique_words,
+        "most_frequent_word": most_frequent_word,
+        "most_frequent_count": max_count
+    }
+
+
+# Main program
+report = create_word_report("feedback.txt", "summary.txt")
+
+print("Lines", report["lines"])
+print("Words", report["words"])
+print("Unique words", report["unique_words"])
+print("Most frequent", report["most_frequent_word"], report["most_frequent_count"])
